@@ -68,7 +68,7 @@ right_limit = x + 100;
 if (x &lt; left_limit) {
     x = left_limit;
     speed = -speed;
-}
+}fdgdfgdfg
 */
 // Platform mozgatása
 x += hsp;
