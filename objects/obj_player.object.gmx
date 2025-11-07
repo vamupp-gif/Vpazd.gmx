@@ -28,7 +28,7 @@
             <string>// --- MOZGÁS VÁLTOZÓK ---
 hsp = 0;
 vsp = 0;
-grv = 0.5;
+grv = 0.8;
 walksp = 6;
 jmp = -10;
 was_on_ground = false;
@@ -118,34 +118,96 @@ key_jump   = keyboard_check_pressed(vk_space);
 key_down   = keyboard_check(vk_down);
 
 // --- TALAJELLENŐRZÉS ---
-var on_ground = place_meeting(x, y + 1, obj_solid);
+on_ground = place_meeting(x, y + 1, obj_solid) || place_meeting(x, y + 1, obj_moving_platform);
 
 
-// --- GRAVITÁCIÓ ---
+// ====================================================================
+//                          GRAVITÁCIÓ
+// ====================================================================
 vsp += grv;
+
 
 // ====================================================================
 //                       ÜTKÖZÉSEK KEZELÉSE
 // ====================================================================
 
-// X irány
+// X irány (szilárd + platform)
+var plat_side = instance_place(x + sign(hsp), y, obj_moving_platform);
 
-if (place_meeting(x + hsp, y, obj_solid)) {
-    while (!place_meeting(x + sign(hsp), y, obj_solid)) {
+if (place_meeting(x + hsp, y, obj_solid) || plat_side != noone) {
+    while (!place_meeting(x + sign(hsp), y, obj_solid) &amp;&amp;
+           instance_place(x + sign(hsp), y, obj_moving_platform) == noone) {
         x += sign(hsp);
     }
     hsp = 0;
 }
 x += hsp;
 
-// Y irány
-if (place_meeting(x, y + vsp, obj_solid )) {
-    while (!place_meeting(x, y + sign(vsp), obj_solid)) {
+// ====================================================================
+//                     Y irány (talaj + mozgó platform)
+// ====================================================================
+
+var plat = instance_place(x, y + vsp, obj_moving_platform);
+var below = place_meeting(x, y + vsp, obj_solid) || plat != noone;
+
+if (below) {
+    // addig mozgatjuk a játékost, amíg közvetlenül fölötte lesz a talaj/platform tetejének
+    while (
+        !place_meeting(x, y + sign(vsp), obj_solid) &amp;&amp; 
+        instance_place(x, y + sign(vsp), obj_moving_platform) == noone
+    ) {
         y += sign(vsp);
     }
     vsp = 0;
+
+    // --- Ha mozgó platformon áll ---
+    if (plat != noone) {
+        // Ha most lépett rá
+        if (plat_offset == undefined) {
+            plat_offset = x - plat.x;
+            y_offset = y - plat.y;
+        }
+// var target_x;
+        if (!key_left &amp;&amp; !key_right) {
+            // Nem nyom irányt → követi a platform mozgását
+            target_x = plat.x + plat_offset
+            x = plat.x + plat_offset
+            y = plat.y + y_offset;
+       
+         } else {
+            // Mozog, ezért csak Y-t követi
+            y = plat.y + y_offset;
+            plat_offset = x - plat.x;
+        }
+        
+        
+    } else {
+        // nincs platform alatt → töröljük az offsetet
+        plat_offset = undefined;
+        y_offset = undefined;
+    }
 }
+
 y += vsp;
+
+
+// ====================================================================
+//                 SZORULÁS ELLENŐRZÉS / KISZABADÍTÁS
+// ====================================================================
+
+if (place_meeting(x, y, obj_solid)  ) {
+    while (place_meeting(x, y, obj_solid) ) {
+        y -= 1;
+    }
+    vsp = 0;
+}
+else if (place_meeting(x, y, obj_moving_platform)){
+ while ( (place_meeting(x, y, obj_moving_platform) )){
+  y += 1
+}
+vsp = 0;
+}
+
 
 
 // ====================================================================
@@ -441,68 +503,80 @@ if (!was_on_ground &amp;&amp; on_ground) {
 if (keyboard_check_pressed(vk_control) &amp;&amp; ammo &gt; 0 &amp;&amp; can_shoot) {
     var bullet = instance_create(x, y, obj_bullet);
 
-    if (image_xscale == 1) bullet.direction = 0;
-    else bullet.direction = 180;
+    // --- FERDE IRÁNYOK ELŐSZÖR ---
+    if (keyboard_check(vk_up) &amp;&amp; keyboard_check(vk_left)) {
+        bullet.direction = 135; // balra-felfelé
+    }
+    else if (keyboard_check(vk_up) &amp;&amp; keyboard_check(vk_right)) {
+        bullet.direction = 45; // jobbra-felfelé
+    }
+    // --- CSAK FELFELÉ ---
+    else if (keyboard_check(vk_up)) {
+        bullet.direction = 90;
+    }
+    
+    // --- CSAK BALRA / JOBBRA ---
+    else {
+        if (image_xscale == 1) bullet.direction = 0;   // jobbra
+        else bullet.direction = 180;                   // balra
+    }
 
     bullet.speed = 15;
     ammo -= 1;
     can_shoot = false;
     alarm[0] = shoot_cooldown;
 }
-
-
-
 // --- MOZGÓ PLATFORM TAPADÁS ---
 
 // --- GRAVITÁCIÓ ---
-vsp += grv;
+// vsp += grv;
 
 // --- Y-IRÁNYÚ ÜTKÖZÉS (szilárd talaj + platform) ---
-var below = place_meeting(x, y + vsp, obj_solid);
-var plat = instance_place(x, y + vsp, obj_moving_platform);
+// var below = place_meeting(x, y + vsp, obj_solid);
+// var plat = instance_place(x, y + vsp, obj_moving_platform);
 
-if (below || plat != noone) {
-    while (!place_meeting(x, y + sign(vsp), obj_solid) &amp;&amp; 
-           instance_place(x, y + sign(vsp), obj_moving_platform) == noone) {
-            y += sign(vsp);
-    }
-    vsp = 0;
+// if (below || plat != noone) {
+//     while (!place_meeting(x, y + sign(vsp), obj_solid) &amp;&amp; 
+//            instance_place(x, y + sign(vsp), obj_moving_platform) == noone) {
+//            y += sign(vsp);
+//    }
+//    vsp = 0;
 
     // Ha a platformon állunk, kövessük
    
- if (plat != noone) {
+// if (plat != noone) {
     // Ha most lépett fel először a platformra
-    if (plat_offset == undefined) {
-        plat_offset = x - plat.x;
-        y_offset = y - plat.y; // távolság a platform tetejétől
-    }
+//    if (plat_offset == undefined) {
+//        plat_offset = x - plat.x;
+//        y_offset = y - plat.y; // távolság a platform tetejétől
+//    }
 
-    if (!key_left &amp;&amp; !key_right) {
-        // 1. eset: nem nyomsz irányt → kövesse x és y
-        x = plat.x + plat_offset;
-        if (vsp &gt; 0) vsp = 0;
-        y = plat.y + y_offset;
-        show_debug_message("első");
-    } else {
-        // 2. eset: nyomsz irányt → csak y-t kövesse, x a player-é
-        if (vsp &gt; 0) vsp = 0;
-        y = plat.y + y_offset;
-        show_debug_message("második");
-        
-         // Frissítsük az offsetet, hogy később az első ágban
-        // a karakter ne ugorjon a platform szélére
-        plat_offset = x - plat.x;
-    }
+//    if (!key_left &amp;&amp; !key_right) {
+//        // 1. eset: nem nyomsz irányt → kövesse x és y
+//        x = plat.x + plat_offset;
+//        if (vsp &gt; 0) vsp = 0;
+//        y = plat.y + y_offset;
+//        show_debug_message("első");
+//    } else {
+//        // 2. eset: nyomsz irányt → csak y-t kövesse, x a player-é
+//        if (vsp &gt; 0) vsp = 0;
+//        y = plat.y + y_offset;
+//        show_debug_message("második");
+//        
+//         // Frissítsük az offsetet, hogy később az első ágban
+//        // a karakter ne ugorjon a platform szélére
+//        plat_offset = x - plat.x;
+//    }
 
-} else {
-    // nincs platform alatt → offset törlése
-    plat_offset = undefined;
-    y_offset = undefined;
-}
-}
+//} else {
+//    // nincs platform alatt → offset törlése
+//    plat_offset = undefined;
+//    y_offset = undefined;
+//}
+//}
 
 
-y += vsp;
+//y += vsp;
 
 // ====================================================================
 //                      ÁLLAPOT MENTÉSE
