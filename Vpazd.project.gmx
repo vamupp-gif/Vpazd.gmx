@@ -48,10 +48,12 @@
         <sprite>sprites\spr_enemy3_idle</sprite>
         <sprite>sprites\spr_enemy3_dead</sprite>
       </sprites>
+      <sprite>sprites\spr_spike</sprite>
     </sprites>
     <sprite>sprites\spr_trambulin</sprite>
     <sprite>sprites\sprite27</sprite>
     <sprite>sprites\spr_moving_platform</sprite>
+    <sprite>sprites\spr_moving_wall</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -69,6 +71,7 @@
       <object>objects\obj_trambulin</object>
       <object>objects\object13</object>
       <object>objects\obj_moving_platform</object>
+      <object>objects\obj_moving_wall</object>
     </objects>
     <object>objects\obj_solid</object>
     <objects name="enemy">
@@ -76,6 +79,7 @@
       <object>objects\obj_enemy2</object>
       <object>objects\obj_enemy2_bullet</object>
       <object>objects\obj_enemy3</object>
+      <object>objects\obj_spike</object>
     </objects>
     <object>objects\save</object>
     <objects name="npc">

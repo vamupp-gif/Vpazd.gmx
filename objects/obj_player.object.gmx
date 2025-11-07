@@ -64,6 +64,8 @@ is_fastfall = false;
 
 plat_offset = undefined;
  y_offset = undefined;
+ 
+ ignore_platform_timer = 0;
 
 
 </string>
@@ -126,6 +128,24 @@ on_ground = place_meeting(x, y + 1, obj_solid) || place_meeting(x, y + 1, obj_mo
 // ====================================================================
 vsp += grv;
 
+// --- FALRA UGRÁS / PLATFORMRA LESZÁLLÁS ellenőrzése
+if (vsp &gt; 0) {
+    if (place_meeting(x, y + vsp, obj_moving_wall)) {
+        while (!place_meeting(x, y + 1, obj_moving_wall)) {
+            y += 1;
+        }
+        vsp = 0;
+        on_ground = true;
+    }
+}
+
+// --- Y irány (talaj + mozgó platform)
+var can_collide_platform = (ignore_platform_timer &lt;= 0);
+var plat  = instance_place(x, y + vsp, obj_moving_platform);
+var plat2 = noone;
+if (can_collide_platform) {
+    plat2 = instance_place(x, y + vsp, obj_moving_wall);
+}
 
 // ====================================================================
 //                       ÜTKÖZÉSEK KEZELÉSE
@@ -148,6 +168,7 @@ x += hsp;
 // ====================================================================
 
 var plat = instance_place(x, y + vsp, obj_moving_platform);
+var mwall = instance_place(x, y + vsp, obj_moving_wall);
 var below = place_meeting(x, y + vsp, obj_solid) || plat != noone;
 
 if (below) {
@@ -161,13 +182,13 @@ if (below) {
     vsp = 0;
 
     // --- Ha mozgó platformon áll ---
-    if (plat != noone) {
+    if (plat != noone ) {
         // Ha most lépett rá
         if (plat_offset == undefined) {
             plat_offset = x - plat.x;
             y_offset = y - plat.y;
         }
-// var target_x;
+        // var target_x;
         if (!key_left &amp;&amp; !key_right) {
             // Nem nyom irányt → követi a platform mozgását
             target_x = plat.x + plat_offset
@@ -186,6 +207,7 @@ if (below) {
         plat_offset = undefined;
         y_offset = undefined;
     }
+    
 }
 
 y += vsp;
@@ -420,14 +442,22 @@ if (invincible) {
     if (invincible_timer &lt;= 0) invincible = false;
 }
 
+ var spike = instance_place(x, y, obj_spike);
+if (spike != noone) {
+ if (!invincible) {
+        // --- NORMÁL ütközés ---  
+        p_hp -= 1;
+        invincible = true;
+        invincible_timer = room_speed;
+        if (spike.x &gt; x) hsp = -8; else hsp = 8;
+        vsp = -6;
+    }
+}
 
-
-
-
-
-
-
-
+if (invincible) {
+    invincible_timer -= 1;
+    if (invincible_timer &lt;= 0) invincible = false;
+}
 
 
 
@@ -581,7 +611,41 @@ if (keyboard_check_pressed(vk_control) &amp;&amp; ammo &gt; 0 &amp;&amp; can_sho
 // ====================================================================
 //                      ÁLLAPOT MENTÉSE
 // ====================================================================
+// --- PLATFORM FELMÁSZÁS / ALÁBÚJÁS ---
 
+var plat_up   = instance_place(x, y - 1, obj_moving_wall);
+var plat_down = instance_place(x, y + 1, obj_moving_wall);
+
+// ha alatta van a platform és felfele nyilat nyom → felmegy rá
+if (keyboard_check_pressed(vk_up) || keyboard_check(vk_up)) {
+  // keressük a fal‑platformot fölöttünk
+    var wall_inst = instance_place(x, y - sprite_height, obj_moving_wall);
+
+    if (wall_inst != noone) {
+        // Áthelyezés a fal tetejére
+        sprite_index = spr_player_jump;
+        image_index = 0;
+        image_speed = 0.5;
+        y = wall_inst.bbox_top - sprite_height/2;
+        vsp = 0;
+    } else {
+        show_debug_message("Nem található elérhető platform fölöttem");
+    }
+}
+
+
+// ha rajta van és lefelé nyilat nyom → átesik rajta
+if (keyboard_check_pressed(vk_down)|| keyboard_check(vk_down)) {
+    if (place_meeting(x, y + 1, obj_moving_wall)) {
+        y += (sprite_height); // egy kicsit beljebb
+        ignore_platform_timer = 15; // 15 frame-ig ne érzékelje az ütközést
+    }
+}
+
+// Ha épp most engedtük el a "le" nyilat → újra érzékelhet platformot
+if (ignore_platform_timer &gt; 0) {
+    ignore_platform_timer -= 1;
+}
 
 
 vsp_previous = vsp;
