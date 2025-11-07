@@ -6,6 +6,12 @@
   <NewExtensions/>
   <sounds name="sound"/>
   <sprites name="sprites">
+    <sprites name="npc">
+      <sprite>sprites\spr_madar_idle</sprite>
+      <sprite>sprites\spr_madar_fly</sprite>
+      <sprite>sprites\spr_ojas</sprite>
+      <sprite>sprites\spr_ojas_orik</sprite>
+    </sprites>
     <sprites name="player">
       <sprite>sprites\spr_player_run</sprite>
       <sprite>sprites\spr_player_creep</sprite>
@@ -72,6 +78,11 @@
       <object>objects\obj_enemy3</object>
     </objects>
     <object>objects\save</object>
+    <objects name="npc">
+      <object>objects\obj_madar</object>
+      <object>objects\obj_ojas</object>
+      <object>objects\obj_ojas_orik</object>
+    </objects>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0</room>
