@@ -56,6 +56,12 @@ is_crouching = false;
 
 // --- ÉLET ---
 p_hp = 5;
+
+if (!variable_global_exists("m_hp"))
+    global.m_hp = 3;
+if (!variable_global_exists("money"))
+    global.money = 0;    
+    
 invincible = false;
 invincible_timer = 0;
 
@@ -66,6 +72,8 @@ plat_offset = undefined;
  y_offset = undefined;
  
  ignore_platform_timer = 0;
+ // Van-e kulcs
+has_key = false;
 
 
 </string>
@@ -330,10 +338,18 @@ if (key_jump &amp;&amp; jump_count &lt; max_jumps &amp;&amp; !is_sliding &amp;&a
         sprite_index = spr_player_jump;
         image_index = 0;
         image_speed = 0.5;
+        
+        // Hang lejátszása
+        audio_play_sound(snd_ugras1, 1, false);
+        
     } else if (jump_count == 2) {
         sprite_index = spr_player_doublejump;
         image_index = 0;
         image_speed = 0.5;
+        
+        // Hang lejátszása
+        audio_play_sound(snd_ugras2, 1, false);
+        
     }
 }
 
@@ -526,6 +542,21 @@ if (!was_on_ground &amp;&amp; on_ground) {
     }
 }
 
+//élet
+if (p_hp &lt;= 0)
+{
+    global.m_hp -= 1;
+
+    if (global.m_hp &lt;= 0) {
+        room_goto(rm_EndGame);
+    } else {
+        room_restart();
+    }
+}
+
+
+
+
 // ====================================================================
 //                            LÖVÉS
 // ====================================================================
@@ -551,62 +582,12 @@ if (keyboard_check_pressed(vk_control) &amp;&amp; ammo &gt; 0 &amp;&amp; can_sho
         else bullet.direction = 180;                   // balra
     }
 
-    bullet.speed = 15;
+    bullet.speed = 25;
     ammo -= 1;
     can_shoot = false;
     alarm[0] = shoot_cooldown;
 }
-// --- MOZGÓ PLATFORM TAPADÁS ---
 
-// --- GRAVITÁCIÓ ---
-// vsp += grv;
-
-// --- Y-IRÁNYÚ ÜTKÖZÉS (szilárd talaj + platform) ---
-// var below = place_meeting(x, y + vsp, obj_solid);
-// var plat = instance_place(x, y + vsp, obj_moving_platform);
-
-// if (below || plat != noone) {
-//     while (!place_meeting(x, y + sign(vsp), obj_solid) &amp;&amp; 
-//            instance_place(x, y + sign(vsp), obj_moving_platform) == noone) {
-//            y += sign(vsp);
-//    }
-//    vsp = 0;
-
-    // Ha a platformon állunk, kövessük
-   
-// if (plat != noone) {
-    // Ha most lépett fel először a platformra
-//    if (plat_offset == undefined) {
-//        plat_offset = x - plat.x;
-//        y_offset = y - plat.y; // távolság a platform tetejétől
-//    }
-
-//    if (!key_left &amp;&amp; !key_right) {
-//        // 1. eset: nem nyomsz irányt → kövesse x és y
-//        x = plat.x + plat_offset;
-//        if (vsp &gt; 0) vsp = 0;
-//        y = plat.y + y_offset;
-//        show_debug_message("első");
-//    } else {
-//        // 2. eset: nyomsz irányt → csak y-t kövesse, x a player-é
-//        if (vsp &gt; 0) vsp = 0;
-//        y = plat.y + y_offset;
-//        show_debug_message("második");
-//        
-//         // Frissítsük az offsetet, hogy később az első ágban
-//        // a karakter ne ugorjon a platform szélére
-//        plat_offset = x - plat.x;
-//    }
-
-//} else {
-//    // nincs platform alatt → offset törlése
-//    plat_offset = undefined;
-//    y_offset = undefined;
-//}
-//}
-
-
-//y += vsp;
 
 // ====================================================================
 //                      ÁLLAPOT MENTÉSE
@@ -650,6 +631,99 @@ if (ignore_platform_timer &gt; 0) {
 
 vsp_previous = vsp;
 was_on_ground = on_ground;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// Ellenőrizzük, hogy ütközött-e az obj_erme objektummal
+if (place_meeting(x, y, obj_erme)) {
+    
+    // Megtaláljuk a konkrét érmét, hogy törölhessük
+    var erme = instance_place(x, y, obj_erme);
+
+    if (erme != noone) {
+        // Hang lejátszása
+       // audio_play_sound(snd_erme, 1, false);
+
+        // Pénz hozzáadása
+        global.money += 10;
+
+        // Érme törlése
+        with (erme) instance_destroy();
+    }
+}
+
+
+// Ellenőrizzük, hogy ütközött-e az obj_erme objektummal
+if (place_meeting(x, y, obj_elet)) {
+    
+    // Megtaláljuk a konkrét érmét, hogy törölhessük
+    var erme = instance_place(x, y, obj_elet);
+
+    if (erme != noone) {
+        // Hang lejátszása
+       // audio_play_sound(snd_erme, 1, false);
+
+        if (obj_player.p_hp &lt; 5){// Pénz hozzáadása
+        obj_player.p_hp += 1;
+        }
+
+        // Érme törlése
+        with (erme) instance_destroy();
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// Kulcs felvétele
+var k = instance_place(x, y, obj_key);
+if (k != noone) {
+    has_key = true;        // player most már rendelkezik kulccsal
+    with (k) instance_destroy(); // töröljük a kulcsot
+}
+
+
+// Ha van kulcs és hozzáér az ajtóhoz
+if (has_key) {
+    var d = instance_place(x, y, obj_door);
+    if (d != noone) {
+        with (d) instance_destroy(); // ajtó eltűnik
+        has_key = false;             // kulcs elhasználódott
+    }
+}
 </string>
           </argument>
         </arguments>

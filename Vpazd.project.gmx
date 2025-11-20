@@ -4,7 +4,12 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
+  <sounds name="sound">
+    <sound>sound\sou_loves</sound>
+    <sound>sound\snd_ugras1</sound>
+    <sound>sound\snd_ugras2</sound>
+    <sound>sound\snd_serul</sound>
+  </sounds>
   <sprites name="sprites">
     <sprites name="npc">
       <sprite>sprites\spr_madar_idle</sprite>
@@ -27,10 +32,28 @@
         <sprite>sprites\spr_bullet</sprite>
         <sprite>sprites\spr_explosion</sprite>
         <sprite>sprites\spr_ammo</sprite>
+        <sprite>sprites\spr_key</sprite>
       </sprites>
       <sprite>sprites\spr_heart</sprite>
+      <sprite>sprites\spr_elet</sprite>
+      <sprite>sprites\spr_mhp</sprite>
       <sprite>sprites\spr_ammohub</sprite>
       <sprite>sprites\spr_platform</sprite>
+      <sprite>sprites\spr_hub</sprite>
+      <sprite>sprites\spr__erme</sprite>
+      <sprite>sprites\spr_erme_hub</sprite>
+      <sprite>sprites\spr_door</sprite>
+      <sprites name="player2">
+        <sprite>sprites\spr_player2_run</sprite>
+        <sprite>sprites\spr_player2_creep</sprite>
+        <sprite>sprites\spr_player2_down</sprite>
+        <sprite>sprites\spr_player2_slide</sprite>
+        <sprite>sprites\spr_player2_idle</sprite>
+        <sprite>sprites\spr_player2_jump</sprite>
+        <sprite>sprites\spr_player2_downjump</sprite>
+        <sprite>sprites\spr_player2_land</sprite>
+        <sprite>sprites\spr_player2_doublejump</sprite>
+      </sprites>
     </sprites>
     <sprites name="enemy">
       <sprite>sprites\spr_enemy_run</sprite>
@@ -38,6 +61,7 @@
       <sprite>sprites\spr_enemy_jump</sprite>
       <sprites name="enemy2">
         <sprite>sprites\spr_enemy2_idle</sprite>
+        <sprite>sprites\spr_enemy2_bullet</sprite>
         <sprite>sprites\spr_enemy2_attack</sprite>
         <sprite>sprites\spr_enemy2_jump</sprite>
         <sprite>sprites\spr_enemy2_run</sprite>
@@ -55,7 +79,10 @@
     <sprite>sprites\spr_moving_platform</sprite>
     <sprite>sprites\spr_moving_wall</sprite>
   </sprites>
-  <backgrounds name="background"/>
+  <backgrounds name="background">
+    <background>background\background0</background>
+    <background>background\background1</background>
+  </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\player_hit_enemy.gml</script>
@@ -63,6 +90,7 @@
   <objects name="objects">
     <objects name="player">
       <object>objects\obj_player</object>
+      <object>objects\obj_player2</object>
       <object>objects\obj_bullet</object>
       <object>objects\obj_explosion</object>
       <object>objects\obj_ammo</object>
@@ -72,6 +100,7 @@
       <object>objects\object13</object>
       <object>objects\obj_moving_platform</object>
       <object>objects\obj_moving_wall</object>
+      <object>objects\obj_key</object>
     </objects>
     <object>objects\obj_solid</object>
     <objects name="enemy">
@@ -87,9 +116,13 @@
       <object>objects\obj_ojas</object>
       <object>objects\obj_ojas_orik</object>
     </objects>
+    <object>objects\obj_erme</object>
+    <object>objects\obj_elet</object>
+    <object>objects\obj_door</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\room0</room>
+    <room>rooms\demo</room>
+    <room>rooms\rm_EndGame</room>
     <room>rooms\room1</room>
   </rooms>
   <help>

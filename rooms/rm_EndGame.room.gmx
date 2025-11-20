@@ -234,7 +234,19 @@
     <instance objName="obj_moving_wall" x="3008" y="288" name="inst_150B7BEA" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_moving_wall" x="2976" y="288" name="inst_2838C9D0" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
   </instances>
-  <tiles/>
+  <tiles>
+    <tile bgName="background0" x="128" y="160" w="32" h="32" xo="0" yo="0" id="10000001" name="inst_09208C66" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="160" y="160" w="32" h="32" xo="32" yo="0" id="10000002" name="inst_3BFA413B" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="224" y="320" w="32" h="32" xo="0" yo="0" id="10000003" name="inst_695CB945" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="288" y="256" w="32" h="32" xo="32" yo="0" id="10000004" name="inst_7CFC7D40" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="320" y="128" w="32" h="32" xo="32" yo="32" id="10000005" name="inst_F1260353" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1088" y="576" w="32" h="32" xo="32" yo="32" id="10000006" name="inst_382325D9" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1120" y="576" w="32" h="32" xo="32" yo="32" id="10000007" name="inst_76B3A7BA" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1184" y="576" w="32" h="32" xo="32" yo="32" id="10000008" name="inst_3B95B57E" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1248" y="576" w="32" h="32" xo="32" yo="32" id="10000009" name="inst_618ED831" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1280" y="576" w="32" h="32" xo="32" yo="32" id="10000010" name="inst_1DB949B7" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+    <tile bgName="background0" x="1344" y="576" w="32" h="32" xo="32" yo="32" id="10000011" name="inst_89DF9522" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>
+  </tiles>
   <PhysicsWorld>0</PhysicsWorld>
   <PhysicsWorldTop>0</PhysicsWorldTop>
   <PhysicsWorldLeft>0</PhysicsWorldLeft>

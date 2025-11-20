@@ -27,6 +27,98 @@
             <kind>1</kind>
             <string>// Itt beállítjuk, melyik játékost figyeljük
 player = obj_player; // vagy instance id, ha több van
+player2 = obj_player2
+texture_set_interpolation(false);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>display_set_gui_size(960, 540);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="64">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// --- HUD a bal felső sarokban ---
+
+var hub_x = 10;
+var hub_y = 10;
+
+// HUD háttér sprite
+draw_sprite(spr_hub, 0, hub_x, hub_y);
+
+
+// --- MHP ikonok --- 
+
+var mhp = global.m_hp;
+
+// Ikonok pozíciója a HUD-on belül
+var mhp_start_x = hub_x + 12;
+var mhp_start_y = hub_y + 8;
+
+// Ikonok közti távolság
+var mhp_spacing = 20;
+
+for (var i = 0; i &lt; mhp; i++)
+{
+    draw_sprite(spr_mhp, 0, mhp_start_x + i * mhp_spacing, mhp_start_y);
+}
+
+
+
+// --- PÉNZ KIJELZŐ --- 
+
+// Érme ikon pozíciója (a HUD háttérhez igazítva)
+var money_icon_x = hub_x + 12;
+var money_icon_y = hub_y + 50;
+
+// Érme sprite kirajzolása
+draw_sprite(spr_erme_hub, 0, money_icon_x, money_icon_y);
+
+// Pénz érték kiírása
+draw_set_color(c_white);
+//draw_set_font(fnt_default); // ha van saját fontod, ezt cseréld ki
+
+// Kettőspont pozíciója
+var colon_x = money_icon_x + 32;  // 32 px az érme sprite mellé
+var colon_y = money_icon_y + 4;
+
+draw_text(colon_x, colon_y, ": " + string(global.money));
 </string>
           </argument>
         </arguments>
@@ -79,6 +171,57 @@ player = obj_player; // vagy instance id, ha több van
     // Kiírjuk az ammo mennyiségét
     draw_set_color(c_white);
     draw_text(ammo_icon_x + 8, ammo_icon_y -8 , string(player.ammo));
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (instance_exists(player2))
+{
+    var hp = player2.p_hp;
+    var max_hp = 5;
+    
+    // Szívek közti távolság
+    var spacing = 10;
+    
+    // X pozíció: középre igazítjuk a szíveket
+    var start_x = player2.x - ((max_hp - 1) * spacing) / 2;
+    
+    // Y pozíció: a játékos sprite fölött
+    var start_y = player2.y - (sprite_get_height(player2.sprite_index) / 2) - 3;
+
+    // --- Szívek kirajzolása ---
+    for (var i = 0; i &lt; hp; i += 1)
+    {
+        draw_sprite(spr_heart, 0, start_x + i * spacing, start_y);
+    }
+
+    // --- Ammo ikon és mennyiség kirajzolása ---
+    // Legbaloldalibb szív fölé, kicsit feljebb
+    var ammo_icon_x = start_x +1 ; // egy kicsit balra a legelső szívtől
+    var ammo_icon_y = start_y - 13; // kicsit feljebb
+
+    draw_sprite(spr_ammohub, 0, ammo_icon_x, ammo_icon_y);
+
+    // Kiírjuk az ammo mennyiségét
+    draw_set_color(c_white);
+    draw_text(ammo_icon_x + 8, ammo_icon_y -8 , string(player2.ammo));
 }
 </string>
           </argument>

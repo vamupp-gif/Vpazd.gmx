@@ -25,7 +25,8 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>range = 300; // ennyit repül max.
+            <string>audio_play_sound(sou_loves, 1, false);
+range = 300; // ennyit repül max.
 start_x = x;
 start_y = y;
 </string>
@@ -68,6 +69,8 @@ if (hit != noone) {
     instance_create(x, y, obj_explosion);
     with (hit) {
         hp -= 1;
+        // --- Hang lejátszása ---
+        audio_play_sound(snd_serul, 1, false);
         if (hp &lt;= 0) {
             // halál animáció vagy eltűnés
             instance_destroy();
@@ -81,6 +84,7 @@ if (hit2 != noone) {
     instance_create(x, y, obj_explosion);
     with (hit2) {
         hp -= 1;
+        audio_play_sound(snd_serul, 1, false);
         if (hp &lt;= 0) {
             instance_destroy();
         }

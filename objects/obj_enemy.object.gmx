@@ -68,23 +68,46 @@ knock_timer = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// --- GRAVITÁCIÓ ---
+            <string>// ====================================================================
+//                           GRAVITÁCIÓ
+// ====================================================================
 vsp += grv;
 var on_ground = place_meeting(x, y + 1, obj_solid);
-var target = noone;
-// --- ENEMY KNOCKBACK KEZELÉSE ---
+
+// ====================================================================
+//                   ENEMY KNOCKBACK KEZELÉSE
+// ====================================================================
 if (is_knocked) {
     knock_timer -= 1;
     if (knock_timer &lt;= 0) is_knocked = false;
 }
 
-// --- AI MOZGÁS (csak ha nincs knockback) ---
+// ====================================================================
+//                           AI MOZGÁS
+// ====================================================================
 if (!is_knocked) {
 
-    // --- JÁTÉKOS KERESÉSE ---
-    var target = instance_nearest(x, y, obj_player);
+    // ====================================================================
+    //                  JÁTÉKOS KERESÉSE (PLAYER1 + PLAYER2)
+    // ====================================================================
+    var p1 = instance_nearest(x, y, obj_player);
+    var p2 = instance_nearest(x, y, obj_player2);
+    var target = noone;
+
+    // válassza a közelebb lévőt
+    if (p1 != noone &amp;&amp; p2 != noone) {
+        if (point_distance(x, y, p1.x, p1.y) &lt; point_distance(x, y, p2.x, p2.y)) {
+            target = p1;
+        } else {
+            target = p2;
+        }
+    }
+    else if (p1 != noone) target = p1;
+    else if (p2 != noone) target = p2;
+
     var sees_player = false;
 
+    // látótávolság + line of sight
     if (target != noone) {
         var dist = point_distance(x, y, target.x, target.y);
         if (dist &lt; target_distance &amp;&amp; !collision_line(x, y, target.x, target.y, obj_solid, false, true)) {
@@ -92,10 +115,13 @@ if (!is_knocked) {
         }
     }
 
+    // állapotváltás
     if (sees_player) state = "chase";
     else state = "wander";
 
-    // --- WANDER ---
+    // ====================================================================
+    //                              WANDER
+    // ====================================================================
     if (state == "wander") {
         wander_timer -= 1;
         jump_timer -= 1;
@@ -106,50 +132,47 @@ if (!is_knocked) {
         }
 
         hsp = wander_dir * walksp;
-        
-         // --- FAL / SZAKADÉK ÉRZÉKELÉS ---
-    var wall_ahead = place_meeting(x + (4 * sign(hsp)), y, obj_solid);
-    var no_ground_ahead = !place_meeting(x + (8 * sign(hsp)), y + 8, obj_solid);
 
-    if ((wall_ahead || no_ground_ahead) &amp;&amp; on_ground) {
-        // Forduljon meg
-        wander_dir *= -1;
-        hsp = wander_dir * walksp;
-    }
+        // fal / szakadék érzékelés
+        var wall_ahead = place_meeting(x + (4 * sign(hsp)), y, obj_solid);
+        var no_ground_ahead = !place_meeting(x + (8 * sign(hsp)), y + 8, obj_solid);
 
-    // --- RANDOM UGRÁS ---
-    if (jump_timer &lt;= 0 &amp;&amp; on_ground) {
-        vsp = jmp;
-        jump_timer = irandom_range(60, 150);
-    }
-}
-        
+        if ((wall_ahead || no_ground_ahead) &amp;&amp; on_ground) {
+            wander_dir *= -1;
+            hsp = wander_dir * walksp;
+        }
 
+        // random ugrás
         if (jump_timer &lt;= 0 &amp;&amp; on_ground) {
             vsp = jmp;
             jump_timer = irandom_range(60, 150);
         }
     }
 
-    // --- CHASE ---
- if (state == "chase" &amp;&amp; target != noone) {
-    if (x &lt; target.x) hsp = walksp * 1.5;
-    else hsp = -walksp * 1.5;
+    // ====================================================================
+    //                              CHASE (üldözés)
+    // ====================================================================
+    if (state == "chase" &amp;&amp; target != noone) {
 
-    // Ha falba ütközik, próbáljon ugrani
-    if (place_meeting(x + (4 * sign(hsp)), y, obj_solid) &amp;&amp; on_ground) {
-        vsp = jmp;
-    }
+        if (x &lt; target.x) hsp = walksp * 1.5;
+        else hsp = -walksp * 1.5;
 
-    jump_timer -= 1;
-    if (jump_timer &lt;= 0 &amp;&amp; on_ground) {
-        vsp = jmp;
-        jump_timer = irandom_range(60, 120);
+        // fal érzékelés → ugrás
+        if (place_meeting(x + (4 * sign(hsp)), y, obj_solid) &amp;&amp; on_ground) {
+            vsp = jmp;
+        }
+
+        jump_timer -= 1;
+        if (jump_timer &lt;= 0 &amp;&amp; on_ground) {
+            vsp = jmp;
+            jump_timer = irandom_range(60, 120);
+        }
     }
 }
 
-
-// --- ÜTKÖZÉS ---
+// ====================================================================
+//                           ÜTKÖZÉSEK
+// ====================================================================
 if (place_meeting(x + hsp, y, obj_solid)) {
     while (!place_meeting(x + sign(hsp), y, obj_solid)) x += sign(hsp);
     hsp = 0;
@@ -162,18 +185,54 @@ if (place_meeting(x, y + vsp, obj_solid)) {
 }
 y += vsp;
 
-// --- ANIMÁCIÓK ---
+// ====================================================================
+//                           ANIMÁCIÓ
+// ====================================================================
 if (!on_ground) sprite_index = spr_enemy_jump;
 else if (hsp != 0) sprite_index = spr_enemy_run;
 else sprite_index = spr_enemy_idle;
 
 image_speed = 0.4;
 
-// --- IRÁNY ---
+// ====================================================================
+//                           IRÁNY
+// ====================================================================
 if (hsp &gt; 0) image_xscale = 1;
 if (hsp &lt; 0) image_xscale = -1;
 
-// --- HALÁL ---
+// ====================================================================
+//                     PLAYER1 + PLAYER2 SEBZÉS
+// ====================================================================
+
+// --- PLAYER1 ---
+var hit1 = instance_place(x, y, obj_player);
+if (hit1 != noone &amp;&amp; !hit1.invincible) {
+    hit1.p_hp -= 1;
+    hit1.invincible = true;
+    hit1.invincible_timer = room_speed;
+
+    // HELYES irány (position based)
+    var push1 = sign(hit1.x - x);
+    hit1.hsp = push1 * 8;
+    hit1.vsp = -6;
+}
+
+// --- PLAYER2 ---
+var hit2 = instance_place(x, y, obj_player2);
+if (hit2 != noone &amp;&amp; !hit2.invincible) {
+    hit2.p_hp -= 1;
+    hit2.invincible = true;
+    hit2.invincible_timer = room_speed;
+
+    // HELYES irány (position based)
+    var push2 = sign(hit2.x - x);
+    hit2.hsp = push2 * 8;
+    hit2.vsp = -6;
+}
+
+// ====================================================================
+//                            HALÁL
+// ====================================================================
 if (hp &lt;= 0) instance_destroy();
 </string>
           </argument>

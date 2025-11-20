@@ -29,6 +29,11 @@
     with (obj_player) ammo += 10;
     instance_destroy();
 }
+else
+if (place_meeting(x, y, obj_player2)) {
+    with (obj_player2) ammo += 10;
+    instance_destroy();
+}
 </string>
           </argument>
         </arguments>

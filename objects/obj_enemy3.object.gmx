@@ -61,32 +61,72 @@ target = obj_player;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Távolság a játékostól
+            <string>// ====================================================================
+//                         PLAYER1 + PLAYER2 KIVÁLASZTÁSA
+// ====================================================================
+
+var p1 = instance_nearest(x, y, obj_player);
+var p2 = instance_nearest(x, y, obj_player2);
+
+var target = noone;
+
+// Válaszd ki a közelebbi playert
+if (p1 != noone &amp;&amp; p2 != noone) {
+    if (point_distance(x, y, p1.x, p1.y) &lt; point_distance(x, y, p2.x, p2.y)) {
+        target = p1;
+    } else {
+        target = p2;
+    }
+}
+else if (p1 != noone) target = p1;
+else if (p2 != noone) target = p2;
+
+
+// Ha nincs target, akkor maradjon idle
+if (target == noone) {
+    state = "idle";
+    exit;
+}
+
+
+// ====================================================================
+//                         TÁVOLSÁG A TARGETTŐL
+// ====================================================================
 var dx = target.x - x;
 var dy = target.y - y;
 var dist = point_distance(x, y, target.x, target.y);
 
-// Visszalökés kezelése
+
+// ====================================================================
+//                          KNOCKBACK KEZELÉS
+// ====================================================================
 if (knockback_timer &gt; 0) {
     knockback_timer -= 1;
+
     x -= knockback_dx * knockback_speed;
     y -= knockback_dy * knockback_speed;
+
     exit;
 }
 
-// Állapotváltás
+
+// ====================================================================
+//                           ÁLLAPOTVÁLTÁS
+// ====================================================================
 if (state == "idle" &amp;&amp; dist &lt; 200) {
     state = "chase";
     sprite_index = spr_enemy3_chase;
     image_speed = 0.4;
-    speed = 1; // növelt sebesség
+    speed = 1; 
 }
 
-// Üldözés
+
+// ====================================================================
+//                                CHASE
+// ====================================================================
 if (state == "chase") {
+
     var angle = point_direction(x, y, target.x, target.y);
-
-
 
     // Mozgás irányvektor
     var vx = lengthdir_x(speed, angle);
@@ -96,43 +136,31 @@ if (state == "chase") {
     wave_offset += wave_frequency;
     var wave = sin(wave_offset) * wave_amplitude;
 
-    // Mozgás
+    // Alap mozgás
     x += vx;
     y += vy + wave;
-    
+
+    // Kiegészítő gyors oldalirányú mozgás
     if (target.x &lt; x) {
-        x -= speed*2;
+        x -= speed * 2;
         image_xscale = -1;
     } else {
         x += speed;
         image_xscale = 1;
     }
 
-    // Hullámzás Y tengelyen
+    // Újabb hullám-eltolás
     wave_offset += wave_frequency;
     var wave = sin(wave_offset) * wave_amplitude;
     y += wave;
-    
-
-
-    // Ütközés a játékossal
-   // if (place_meeting(x, y, target)) {
-   // if (image_xscale == 1){
-    //    knockback_dx = sign(x + target.x);
-     //   knockback_dy = sign(y + target.y);
-      //  knockback_timer = 10;
- //       }
-//        else
- //       {
- //       knockback_dx = sign(x - target.x);
- //       knockback_dy = sign(y - target.y);
- //       knockback_timer = 10;
- //       }
- //   }
-//}
 }
-// Halál állapot
+
+
+// ====================================================================
+//                                DEAD
+// ====================================================================
 if (state == "dead") {
+
     y += vspeed;
     vspeed += 1; // gravitáció
 
@@ -140,6 +168,7 @@ if (state == "dead") {
         instance_destroy();
     }
 }
+
 
 </string>
           </argument>
