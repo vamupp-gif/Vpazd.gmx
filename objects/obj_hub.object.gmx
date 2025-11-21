@@ -94,9 +94,23 @@ var mhp_start_y = hub_y + 8;
 // Ikonok közti távolság
 var mhp_spacing = 20;
 
+// Méret
+var scale = 2; // 1 = eredeti méret, 2 = kétszeres méret
+
 for (var i = 0; i &lt; mhp; i++)
 {
-    draw_sprite(spr_mhp, 0, mhp_start_x + i * mhp_spacing, mhp_start_y);
+   //draw_sprite(spr_hub_hearth, 0, mhp_start_x + i * mhp_spacing-5, mhp_start_y+2);
+    draw_sprite_ext(
+    spr_hub_hearth, // sprite
+    0,            // frame
+    mhp_start_x + i * mhp_spacing, // x pozíció
+    mhp_start_y + 8, // y pozíció
+    scale,        // x skála
+    scale,        // y skála
+    0,            // forgatás (rotation)
+    c_white,      // szín
+    1             // átlátszatlanság
+);
 }
 
 
@@ -104,21 +118,39 @@ for (var i = 0; i &lt; mhp; i++)
 // --- PÉNZ KIJELZŐ --- 
 
 // Érme ikon pozíciója (a HUD háttérhez igazítva)
-var money_icon_x = hub_x + 12;
-var money_icon_y = hub_y + 50;
+var money_icon_x = hub_x ;
+var money_icon_y = hub_y + 40;
 
-// Érme sprite kirajzolása
-draw_sprite(spr_erme_hub, 0, money_icon_x, money_icon_y);
+// Érme sprite kirajzolása nagyítva
+for (var i = 0; i &lt; mhp; i++)
+{
+    draw_sprite_ext(
+    spr_erme_hub, // sprite
+    0,            // frame
+    money_icon_x, // x pozíció
+    money_icon_y, // y pozíció
+    scale,        // x skála
+    scale,        // y skála
+    0,            // forgatás (rotation)
+    c_white,      // szín
+    1             // átlátszatlanság
+);
+}
 
 // Pénz érték kiírása
 draw_set_color(c_white);
 //draw_set_font(fnt_default); // ha van saját fontod, ezt cseréld ki
 
 // Kettőspont pozíciója
-var colon_x = money_icon_x + 32;  // 32 px az érme sprite mellé
-var colon_y = money_icon_y + 4;
+var colon_x = money_icon_x + 20;  // 32 px az érme sprite mellé
+var colon_y = money_icon_y ;
 
 draw_text(colon_x, colon_y, ": " + string(global.money));
+
+// Skálázás: pl. 2-szeres
+
+//draw_text(0, 0, ": " + string(global.money));
+
 </string>
           </argument>
         </arguments>

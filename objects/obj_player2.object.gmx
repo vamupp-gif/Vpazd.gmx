@@ -526,8 +526,8 @@ if (!was_on_ground &amp;&amp; on_ground) {
         dust.image_yscale = clamp(impact_speed / 10, 1, 2);
     }
 }
-
-if (p_hp &lt;= 0)
+//élet
+if (p_hp &lt;= 0|| y &gt; room_height + 200)
 {
     global.m_hp -= 1;
 
