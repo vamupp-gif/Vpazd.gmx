@@ -78,6 +78,9 @@
     <sprite>sprites\sprite27</sprite>
     <sprite>sprites\spr_moving_platform</sprite>
     <sprite>sprites\spr_moving_wall</sprite>
+    <sprite>sprites\sprite53</sprite>
+    <sprite>sprites\spr_split_line</sprite>
+    <sprite>sprites\sprite55</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
@@ -87,6 +90,9 @@
   <scripts name="scripts">
     <script>scripts\player_hit_enemy.gml</script>
   </scripts>
+  <fonts name="fonts">
+    <font>fonts\font0</font>
+  </fonts>
   <objects name="objects">
     <objects name="player">
       <object>objects\obj_player</object>
@@ -101,6 +107,7 @@
       <object>objects\obj_moving_platform</object>
       <object>objects\obj_moving_wall</object>
       <object>objects\obj_key</object>
+      <object>objects\obj_game_controller</object>
     </objects>
     <object>objects\obj_solid</object>
     <objects name="enemy">
@@ -119,11 +126,12 @@
     <object>objects\obj_erme</object>
     <object>objects\obj_elet</object>
     <object>objects\obj_door</object>
+    <object>objects\obj_split_line</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\demo</room>
-    <room>rooms\rm_EndGame</room>
     <room>rooms\room1</room>
+    <room>rooms\rm_EndGame</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

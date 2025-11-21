@@ -167,6 +167,7 @@ key_down   = keyboard_check(ord("S"));
 key_jump   = keyboard_check_pressed(ord("K"));  // SPACE → K
 key_shoot  = keyboard_check_pressed(ord("L"));  // CTRL → L
 
+
 // --- TALAJELLENŐRZÉS ---
 on_ground = place_meeting(x, y + 1, obj_solid) || place_meeting(x, y + 1, obj_moving_platform);
 
