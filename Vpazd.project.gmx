@@ -74,6 +74,14 @@
         <sprite>sprites\spr_enemy3_dead</sprite>
       </sprites>
       <sprite>sprites\spr_spike</sprite>
+      <sprites name="boss">
+        <sprites name="demoboss">
+          <sprite>sprites\spr_idle</sprite>
+          <sprite>sprites\sprite61</sprite>
+          <sprite>sprites\spr_boss_hit</sprite>
+          <sprite>sprites\spr_dboss_bullet</sprite>
+        </sprites>
+      </sprites>
     </sprites>
     <sprite>sprites\spr_trambulin</sprite>
     <sprite>sprites\sprite27</sprite>
@@ -82,6 +90,9 @@
     <sprite>sprites\sprite53</sprite>
     <sprite>sprites\spr_split_line</sprite>
     <sprite>sprites\sprite55</sprite>
+    <sprites name="map">
+      <sprite>sprites\spr_buttom</sprite>
+    </sprites>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
@@ -117,6 +128,13 @@
       <object>objects\obj_enemy2_bullet</object>
       <object>objects\obj_enemy3</object>
       <object>objects\obj_spike</object>
+      <objects name="boss">
+        <object>objects\obj_demo_boss</object>
+        <object>objects\obj_demon_boss_dead</object>
+        <object>objects\obj_boss_bullet</object>
+        <object>objects\obj_bosstojas</object>
+        <object>objects\obj_boss_healthbar</object>
+      </objects>
     </objects>
     <object>objects\save</object>
     <objects name="npc">
@@ -128,9 +146,11 @@
     <object>objects\obj_elet</object>
     <object>objects\obj_door</object>
     <object>objects\obj_split_line</object>
+    <object>objects\obj_buttom</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\demo</room>
+    <room>rooms\demo2</room>
     <room>rooms\room1</room>
     <room>rooms\rm_EndGame</room>
   </rooms>

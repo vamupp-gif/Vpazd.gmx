@@ -421,7 +421,17 @@ if (sprite_index == spr_player_land &amp;&amp; image_index &gt;= image_number - 
 // ====================================================================
 
 
-
+ var enemy4 = instance_place(x, y, obj_demo_boss);
+if (enemy4 != noone) {
+ if (!invincible) {
+        // --- NORMÁL ütközés ---  
+        p_hp -= 1;
+        invincible = true;
+        invincible_timer = room_speed * 3;
+        if (enemy4.x &gt; x) hsp = -45; else hsp = 45;
+        vsp = -25;
+    }
+}
 
   var enemy3 = instance_place(x, y, obj_enemy3);
 if (enemy3 != noone) {
