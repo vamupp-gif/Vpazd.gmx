@@ -30,6 +30,7 @@
       <sprite>sprites\spr_player_doublejump</sprite>
       <sprites name="fegyver">
         <sprite>sprites\spr_bullet</sprite>
+        <sprite>sprites\spr_bullet_shotgun</sprite>
         <sprite>sprites\spr_explosion</sprite>
         <sprite>sprites\spr_ammo</sprite>
         <sprite>sprites\spr_key</sprite>
@@ -39,6 +40,10 @@
       <sprite>sprites\spr_elet</sprite>
       <sprite>sprites\spr_mhp</sprite>
       <sprite>sprites\spr_ammohub</sprite>
+      <sprite>sprites\spr_ammo_pistol</sprite>
+      <sprite>sprites\spr_ammo_shotgun</sprite>
+      <sprite>sprites\spr_ammo_rocket</sprite>
+      <sprite>sprites\spr_ammo_machinegun</sprite>
       <sprite>sprites\spr_platform</sprite>
       <sprite>sprites\spr_hub</sprite>
       <sprite>sprites\spr__erme</sprite>
@@ -101,6 +106,7 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\player_hit_enemy.gml</script>
+    <script>scripts\fire_bullet.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
@@ -111,7 +117,10 @@
       <object>objects\obj_player2</object>
       <object>objects\obj_bullet</object>
       <object>objects\obj_explosion</object>
-      <object>objects\obj_ammo</object>
+      <object>objects\obj_ammo_pistol</object>
+      <object>objects\obj_ammo_shotgun</object>
+      <object>objects\obj_ammo_rocket</object>
+      <object>objects\obj_ammo_machinegun</object>
       <object>objects\obj_dust</object>
       <object>objects\obj_hub</object>
       <object>objects\obj_trambulin</object>
@@ -120,6 +129,12 @@
       <object>objects\obj_moving_wall</object>
       <object>objects\obj_key</object>
       <object>objects\obj_game_controller</object>
+      <objects name="fegyver">
+        <object>objects\obj_bullet_pistol</object>
+        <object>objects\obj_bullet_shotgun</object>
+        <object>objects\obj_bullet_rocket</object>
+        <object>objects\obj_bullet_machinegun</object>
+      </objects>
     </objects>
     <object>objects\obj_solid</object>
     <objects name="enemy">

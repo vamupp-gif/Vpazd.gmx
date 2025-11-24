@@ -213,16 +213,17 @@ draw_text(colon_x, colon_y, ": " + string(global.money));
         draw_sprite(spr_heart, 0, start_x + i * spacing, start_y);
     }
 
-    // --- Ammo ikon és mennyiség kirajzolása ---
-    // Legbaloldalibb szív fölé, kicsit feljebb
-    var ammo_icon_x = start_x +1 ; // egy kicsit balra a legelső szívtől
-    var ammo_icon_y = start_y - 13; // kicsit feljebb
+ // --- Ammo ikon és mennyiség kirajzolása ---
+var ammo_icon_x = start_x + 1;
+var ammo_icon_y = start_y - 13;
 
-    draw_sprite(spr_ammohub, 0, ammo_icon_x, ammo_icon_y);
+// aktív ammo sprite
+draw_sprite(player.ammo_icon[player.current_ammo], 0, ammo_icon_x, ammo_icon_y);
 
-    // Kiírjuk az ammo mennyiségét
-    draw_set_color(c_white);
-    draw_text(ammo_icon_x + 8, ammo_icon_y -8 , string(player.ammo));
+// mennyiség kiírása
+draw_set_color(c_white);
+draw_text(ammo_icon_x + 8, ammo_icon_y - 8,
+          string(player.ammo[player.current_ammo]));
 }
 </string>
           </argument>
