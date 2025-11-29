@@ -109,6 +109,29 @@ has_key = false;
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>charging = false;    // töltés folyamatban?
+charge = 0;          // 0–10000 között fog nőni
+charge_max = 10000;
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="2" enumb="0">
       <action>
@@ -861,31 +884,82 @@ if (has_key) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// --- Ellenőrzés sírkőhöz érésre ---
-var sirko = instance_place(x, y, obj_sirko);
+            <string>if (instance_exists(obj_player2_szellem) &amp;&amp;
+    place_meeting(x, y, obj_player2) &amp;&amp;
+    keyboard_check(vk_down))
+{
+    charging = true;
+}
+else
+{
+    charging = false;
+    charge = 0;   // megszakítod → nulláról kezd újra
+}
 
-if (sirko != noone) {
-    
-    // --- Élő player animáció ---
-    if (!is_dead) {
-        if (id == obj_player) sprite_index = spr_player_aldas;
-        else if (id == obj_player2) sprite_index = spr_player2_aldas;
-    }
 
-    // --- Nézzük, van-e szellem a sírkőn ---
-    var ghost = noone;
-    if (id == obj_player) ghost = instance_place(sirko.x, sirko.y, obj_player2_szellem);
-    else if (id == obj_player2) ghost = instance_place(sirko.x, sirko.y, obj_player_szellem);
+if (charging)
+{
+    if (charge &lt; charge_max)
+        charge += 50;   // sebesség (nagyítsd/kicsinyítsd)
+    else
+    {
+    if(place_meeting(obj_player2.x, obj_player2.y, obj_player2_szellem))
+    {
+        obj_player2.p_hp = 5;
+        obj_player2.is_dead = false;
 
-    if (ghost != noone) {
-        // Ressurect
-        ghost.is_dead = false;             // szellem visszaalakul élő playerré
-        ghost.p_hp = ghost.p_max_hp;       // max életerő
-        ghost.x = x;                        // odaállítjuk a helyére
-        ghost.y = y;
-        instance_destroy(ghost);            // eltüntetjük a szellemet
+        instance_destroy(obj_player2_szellem);
+        obj_player2.sprite_index = spr_player2_idle;
+
+        charge = 0;
+        charging = false;
+        }
     }
 }
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="64">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (charging)
+{
+    // a player pozíciójának átalakítása GUI koordinátává
+    var gui_x = x - view_xview[0];
+    var gui_y = y - view_yview[0] - 30;  // a player felett
+
+    var width = 50;       // csík szélessége
+    var height = 6;       // csík magassága
+
+    // háttér csík
+    draw_set_color(c_gray);
+    draw_rectangle(gui_x - width/2, gui_y, gui_x + width/2, gui_y + height, false);
+
+    // zöld töltés
+    var percent = charge / charge_max;
+    var fill_width = width * percent;
+
+    draw_set_color(c_green);
+    draw_rectangle(gui_x - width/2, gui_y, gui_x - width/2 + fill_width, gui_y + height, false);
+}
+
 </string>
           </argument>
         </arguments>

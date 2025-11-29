@@ -3,8 +3,8 @@
   <caption></caption>
   <width>8000</width>
   <height>768</height>
-  <vsnap>1</vsnap>
-  <hsnap>1</hsnap>
+  <vsnap>32</vsnap>
+  <hsnap>32</hsnap>
   <isometric>0</isometric>
   <speed>30</speed>
   <persistent>0</persistent>
@@ -297,7 +297,6 @@
     <instance objName="obj_ammo_shotgun" x="3104" y="704" name="inst_383E8B85" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_shotgun" x="3104" y="672" name="inst_B72A26D0" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_shotgun" x="3104" y="640" name="inst_41A8050D" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="obj_buttom" x="0" y="576" name="inst_80CA79C8" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_enemy3" x="1264" y="405" name="inst_3CD3F1DA" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_machinegun" x="1147" y="456" name="inst_6FF9B3B5" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_machinegun" x="845" y="552" name="inst_92A1EA9C" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
@@ -312,6 +311,7 @@
     <instance objName="obj_ammo_shotgun" x="4511" y="681" name="inst_8FF451AF" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_pistol" x="5216" y="610" name="inst_D318FCFF" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_ammo_pistol" x="5510" y="596" name="inst_23C64B47" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
+    <instance objName="obj_sirko" x="352" y="704" name="inst_BE375EE9" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
   </instances>
   <tiles>
     <tile bgName="background0" x="0" y="608" w="32" h="32" xo="0" yo="0" id="10000038" name="inst_80B563C2" depth="1000000" locked="0" colour="4294967295" scaleX="1" scaleY="1"/>

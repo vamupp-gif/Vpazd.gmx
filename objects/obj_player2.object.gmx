@@ -109,6 +109,29 @@ has_key = false;
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>charging = false;    // töltés folyamatban?
+charge = 0;          // 0–10000 között fog nőni
+charge_max = 10000;
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="2" enumb="0">
       <action>
@@ -756,6 +779,59 @@ if (place_meeting(x, y, obj_elet)) {
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (instance_exists(obj_player_szellem) &amp;&amp;
+    place_meeting(x, y, obj_player) &amp;&amp;
+    keyboard_check(ord("S")))
+{
+    charging = true;
+}
+else
+{
+    charging = false;
+    charge = 0;   // megszakítod → nulláról kezd újra
+}
+
+
+if (charging)
+{
+    if (charge &lt; charge_max)
+        charge += 50;   // sebesség (nagyítsd/kicsinyítsd)
+    else
+    {
+    if(place_meeting(obj_player.x, obj_player.y, obj_player_szellem))
+    {
+        obj_player.p_hp = 5;
+        obj_player.is_dead = false;
+
+        instance_destroy(obj_player_szellem);
+        obj_player.sprite_index = spr_player_idle;
+
+        charge = 0;
+        charging = false;
+        }
+    }
+}
+
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="8" enumb="0">
       <action>
@@ -782,6 +858,47 @@ if (invincible) {
 } else {
     draw_self();
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (charging)
+{
+    // a player pozíciójának átalakítása GUI koordinátává
+    var gui_x = x ;
+    var gui_y = y - 30;  // a player felett
+
+    var width = 50;       // csík szélessége
+    var height = 6;       // csík magassága
+
+    // háttér csík
+    draw_set_color(c_gray);
+    draw_rectangle(gui_x - width/2, gui_y, gui_x + width/2, gui_y + height, false);
+
+    // zöld töltés
+    var percent = charge / charge_max;
+    var fill_width = width * percent;
+
+    draw_set_color(c_green);
+    draw_rectangle(gui_x - width/2, gui_y, gui_x - width/2 + fill_width, gui_y + height, false);
+}
+
 </string>
           </argument>
         </arguments>
