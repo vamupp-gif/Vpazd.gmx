@@ -35,7 +35,7 @@ hp = 15;
 
 // Lövés
 shoot_timer = 0;
-shoot_rate = room_speed * 2;
+shoot_rate = room_speed * 4;
 
 // Tojás
 egg_timer = 0;
@@ -122,30 +122,39 @@ else {
 //------------------------------------------------
 // LÖVÉS A LEGKÖZELEBBI JÁTÉKOSRA
 //------------------------------------------------
+
+// LÖVÉS A LEGKÖZELEBBI ÉLŐ JÁTÉKOSRA
+//------------------------------------------------
 shoot_timer++;
 if (shoot_timer &gt;= shoot_rate) {
     shoot_timer = 0;
 
     var target = noone;
 
-    if (instance_exists(obj_player) &amp;&amp; instance_exists(obj_player2)) {
+    // Csak élő játékosokat nézzük
+    var player1_alive = instance_exists(obj_player) &amp;&amp; !obj_player.is_dead;
+    var player2_alive = instance_exists(obj_player2) &amp;&amp; !obj_player2.is_dead;
+
+    if (player1_alive &amp;&amp; player2_alive) {
         var d1 = point_distance(x, y, obj_player.x, obj_player.y);
         var d2 = point_distance(x, y, obj_player2.x, obj_player2.y);
 
         if (d1 &lt; d2) target = obj_player; else target = obj_player2;
     }
-    else {
-        if (instance_exists(obj_player)) target = obj_player;
-        if (instance_exists(obj_player2)) target = obj_player2;
+    else if (player1_alive) {
+        target = obj_player;
+    }
+    else if (player2_alive) {
+        target = obj_player2;
     }
 
+    // Csak élő játékosra lő
     if (target != noone) {
         var b = instance_create(x, y, obj_boss_bullet);
         b.direction = point_direction(x, y, target.x, target.y);
         b.speed = 8;
     }
 }
-
 
 //------------------------------------------------
 // TOJÁS LEDOBÁSA
@@ -186,7 +195,39 @@ if (hp &lt;= 0) {
         </arguments>
       </action>
     </event>
-    <event eventtype="4" ename="obj_bullet">
+    <event eventtype="4" ename="obj_bullet_shotgun">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 3;
+
+// Sérülés sprite
+sprite_index = spr_boss_hit;
+image_speed = 0.2; // animáció sebessége
+
+// Alarm beállítása, hogy 0.2 mp múlva visszaálljon
+alarm[0] = round(room_speed * 0.2);
+
+instance_destroy(other); // lövedék eltüntetése
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_bullet_pistol">
       <action>
         <libid>1</libid>
         <id>603</id>

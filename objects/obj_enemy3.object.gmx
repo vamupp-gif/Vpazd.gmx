@@ -65,29 +65,34 @@ target = obj_player;
 //                         PLAYER1 + PLAYER2 KIVÁLASZTÁSA
 // ====================================================================
 
-var p1 = instance_nearest(x, y, obj_player);
-var p2 = instance_nearest(x, y, obj_player2);
-
 var target = noone;
+var nearest_player = noone;
 
-// Válaszd ki a közelebbi playert
-if (p1 != noone &amp;&amp; p2 != noone) {
-    if (point_distance(x, y, p1.x, p1.y) &lt; point_distance(x, y, p2.x, p2.y)) {
-        target = p1;
+// Ellenőrizzük az élő játékosokat
+if (instance_exists(obj_player) &amp;&amp; !obj_player.is_dead) {
+    nearest_player = obj_player;
+}
+
+if (instance_exists(obj_player2) &amp;&amp; !obj_player2.is_dead) {
+    if (nearest_player == noone) {
+        nearest_player = obj_player2;
     } else {
-        target = p2;
+        // már van egy élő játékos -&gt; nézzük melyik a közelebbi
+        var d1 = point_distance(x, y, nearest_player.x, nearest_player.y);
+        var d2 = point_distance(x, y, obj_player2.x, obj_player2.y);
+        if (d2 &lt; d1) nearest_player = obj_player2;
     }
 }
-else if (p1 != noone) target = p1;
-else if (p2 != noone) target = p2;
 
+target = nearest_player;
 
-// Ha nincs target, akkor maradjon idle
+// Ha nincs élő target, idle állapot
 if (target == noone) {
     state = "idle";
+    sprite_index = spr_enemy3_idle;
+    image_speed = 0.4;
     exit;
 }
-
 
 // ====================================================================
 //                         TÁVOLSÁG A TARGETTŐL
@@ -95,7 +100,6 @@ if (target == noone) {
 var dx = target.x - x;
 var dy = target.y - y;
 var dist = point_distance(x, y, target.x, target.y);
-
 
 // ====================================================================
 //                          KNOCKBACK KEZELÉS
@@ -109,7 +113,6 @@ if (knockback_timer &gt; 0) {
     exit;
 }
 
-
 // ====================================================================
 //                           ÁLLAPOTVÁLTÁS
 // ====================================================================
@@ -119,7 +122,6 @@ if (state == "idle" &amp;&amp; dist &lt; 200) {
     image_speed = 0.4;
     speed = 1; 
 }
-
 
 // ====================================================================
 //                                CHASE
@@ -151,10 +153,9 @@ if (state == "chase") {
 
     // Újabb hullám-eltolás
     wave_offset += wave_frequency;
-    var wave = sin(wave_offset) * wave_amplitude;
+    wave = sin(wave_offset) * wave_amplitude;
     y += wave;
 }
-
 
 // ====================================================================
 //                                DEAD
@@ -168,8 +169,146 @@ if (state == "dead") {
         instance_destroy();
     }
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_bullet_machinegun">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 1;
+knockback_dx = sign(x - other.x);
+knockback_dy = sign(y - other.y);
+knockback_timer = 10;
+sprite_index = spr_enemy3_hit;
+image_speed = 0.4;
 
+// Halál ellenőrzés
+if (hp &lt;= 0) {
+    state = "dead";
+    sprite_index = spr_enemy3_dead;
+    vspeed = -10;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_bullet_rocket">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 4;
+knockback_dx = sign(x - other.x);
+knockback_dy = sign(y - other.y);
+knockback_timer = 10;
+sprite_index = spr_enemy3_hit;
+image_speed = 0.4;
 
+// Halál ellenőrzés
+if (hp &lt;= 0) {
+    state = "dead";
+    sprite_index = spr_enemy3_dead;
+    vspeed = -10;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_bullet_shotgun">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 2;
+knockback_dx = sign(x - other.x);
+knockback_dy = sign(y - other.y);
+knockback_timer = 10;
+sprite_index = spr_enemy3_hit;
+image_speed = 0.4;
+
+// Halál ellenőrzés
+if (hp &lt;= 0) {
+    state = "dead";
+    sprite_index = spr_enemy3_dead;
+    vspeed = -10;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_bullet_pistol">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hp -= 1;
+knockback_dx = sign(x - other.x);
+knockback_dy = sign(y - other.y);
+knockback_timer = 10;
+sprite_index = spr_enemy3_hit;
+image_speed = 0.4;
+
+// Halál ellenőrzés
+if (hp &lt;= 0) {
+    state = "dead";
+    sprite_index = spr_enemy3_dead;
+    vspeed = -10;
+}
 </string>
           </argument>
         </arguments>

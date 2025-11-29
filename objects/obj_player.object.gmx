@@ -25,7 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// --- MOZGÁS VÁLTOZÓK ---
+            <string>key_left  = false;
+key_right = false;
+key_up    = false;
+key_down  = false;
+key_jump  = false;
+
+is_dead = false;
+// --- MOZGÁS VÁLTOZÓK ---
 hsp = 0;
 vsp = 0;
 grv = 0.8;
@@ -36,12 +43,13 @@ was_on_ground = false;
 // --- AMMO RENDSZER ---
 current_ammo = 0; // aktív lőszer
 
-ammo = array_create(4);
-ammo[0] = 30; // pisztoly
-ammo[1] = 10; // shotgun
-ammo[2] = 4;  // rakéta
-ammo[3] = 60; // gépfegyver
-
+if (!variable_global_exists("ammo")) {
+    global.ammo = array_create(4);
+    global.ammo[0] = 1000;
+    global.ammo[1] = 1000;
+    global.ammo[2] = 1000;
+    global.ammo[3] = 1000;
+}
 // --- tüzelés ---
 can_shoot = true;
 shoot_cooldown = 10;
@@ -142,7 +150,27 @@ has_key = false;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// --- IRÁNYÍTÁS ---
+            <string>if (is_dead)
+{
+    // Irányítás tiltása
+    key_left  = false;
+    key_right = false;
+    key_up    = false;
+    key_down  = false;
+    key_jump  = false;
+
+    // Nem mozoghat, csak animálódik
+    hsp = 0;
+    vsp = 0;
+
+    exit; // a teljes step kódot kihagyjuk
+}
+
+
+
+
+
+// --- IRÁNYÍTÁS ---
 key_left   = keyboard_check(vk_left);
 key_right  = keyboard_check(vk_right);
 key_jump   = keyboard_check_pressed(vk_space);
@@ -575,26 +603,71 @@ if (!was_on_ground &amp;&amp; on_ground) {
 
 //élet
 
-if (p_hp &lt;= 0 || y &gt; room_height + 200)
+// ====================================================================
+//                             HALÁL
+// ====================================================================
+if (!is_dead &amp;&amp; (p_hp &lt;= 0 || y &gt; room_height + 200))
 {
-    global.m_hp -= 1;
+ // Ha leesett a pályáról, állítsuk p_hp-t 0-ra
+    if (y &gt; room_height + 200) {
+        p_hp = 0;
+    }
+    is_dead = true;
+
+    // Halott animáció
+    sprite_index = spr_player_halott;
+    image_speed = 0.4;
+
+    // Irányítás tiltása
+    key_left = key_right = key_jump = key_down = key_up = false;
+
+   // Meghalásnál még essen le a talajig
+    var landed = false;
+    while (!landed &amp;&amp; y &lt; room_height) // limit a room aljáig
+    {
+        if (!place_meeting(x, y + 1, obj_solid))
+        {
+            y += 4; // esés sebessége
+        }
+        else
+        {
+            landed = true;
+        }
+    }
+
+    // Ha a player leesett a room aljára és nincs talaj
+    if (y &gt;= room_height)
+    {
+        y = room_height; // a képernyő aljára
+        // opcionálisan létrehozhatsz itt azonnal szellemet
+    }
+    
+
+    // Szellem létrehozása a földön
+    instance_create(x, y, obj_player_szellem);
+
+    // Ellenőrizzük, hogy mindkét player halott-e
+    if ((!instance_exists(obj_player) || obj_player.is_dead) &amp;&amp;
+        (!instance_exists(obj_player2) || obj_player2.is_dead))
+    {
+          global.m_hp -= 1;
 
     if (global.m_hp &lt;= 0) {
         room_goto(rm_EndGame);
     } else {
         room_restart();
     }
+    }
 }
-
-
 // ====================================================================
 //                     LŐSZER VÁLTÁS (SHIFT)
 // ====================================================================
 if (keyboard_check_pressed(vk_shift)) {
     current_ammo += 1;
-    if (current_ammo &gt; 3) current_ammo = 0;
+    if (current_ammo &gt;= array_length_1d(global.ammo)) {
+        current_ammo = 0;
+    }
 }
-
 // ====================================================================
 //                            LÖVÉS
 // ====================================================================
@@ -604,7 +677,7 @@ var shoot_hold    = keyboard_check(vk_control);
 var is_machinegun = (current_ammo == 3);
 
 // Van ammo + lehet lőni?
-if (ammo[current_ammo] &gt; 0 &amp;&amp; can_shoot)
+if (global.ammo[current_ammo] &gt; 0 &amp;&amp; can_shoot)
 {
     // egyszeri lövés (pisztoly / shotgun / rakéta)
     if (!is_machinegun &amp;&amp; shoot_pressed) {
@@ -616,7 +689,6 @@ if (ammo[current_ammo] &gt; 0 &amp;&amp; can_shoot)
         fire_bullet();
     }
 }
-
 // ====================================================================
 //                        VISSZARÚGÁS (gépfegyver)
 // ====================================================================
@@ -767,6 +839,51 @@ if (has_key) {
     if (d != noone) {
         with (d) instance_destroy(); // ajtó eltűnik
         has_key = false;             // kulcs elhasználódott
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// --- Ellenőrzés sírkőhöz érésre ---
+var sirko = instance_place(x, y, obj_sirko);
+
+if (sirko != noone) {
+    
+    // --- Élő player animáció ---
+    if (!is_dead) {
+        if (id == obj_player) sprite_index = spr_player_aldas;
+        else if (id == obj_player2) sprite_index = spr_player2_aldas;
+    }
+
+    // --- Nézzük, van-e szellem a sírkőn ---
+    var ghost = noone;
+    if (id == obj_player) ghost = instance_place(sirko.x, sirko.y, obj_player2_szellem);
+    else if (id == obj_player2) ghost = instance_place(sirko.x, sirko.y, obj_player_szellem);
+
+    if (ghost != noone) {
+        // Ressurect
+        ghost.is_dead = false;             // szellem visszaalakul élő playerré
+        ghost.p_hp = ghost.p_max_hp;       // max életerő
+        ghost.x = x;                        // odaállítjuk a helyére
+        ghost.y = y;
+        instance_destroy(ghost);            // eltüntetjük a szellemet
     }
 }
 </string>

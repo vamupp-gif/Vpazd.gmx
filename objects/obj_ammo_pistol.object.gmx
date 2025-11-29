@@ -30,7 +30,7 @@
 // Player 1
 if (place_meeting(x, y, obj_player)) {
     with (obj_player) {
-        ammo[0] += 10; // pisztoly ammo
+        global.ammo[0] += 10; // pisztoly ammo
     }
     instance_destroy();
 }
@@ -38,7 +38,7 @@ if (place_meeting(x, y, obj_player)) {
 // Player 2
 else if (place_meeting(x, y, obj_player2)) {
     with (obj_player2) {
-        ammo[0] += 10;
+        global.ammo2[0] += 10;
     }
     instance_destroy();
 }

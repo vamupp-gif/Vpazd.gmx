@@ -25,26 +25,58 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>var distance = abs(obj_player.x - obj_player2.x);
+            <string>var cam1 = obj_player;
+if (instance_exists(obj_player_szellem)) cam1 = obj_player_szellem;
+
+var cam2 = obj_player2;
+if (instance_exists(obj_player2_szellem)) cam2 = obj_player2_szellem;
+
+var distancex = abs(cam1.x - cam2.x);
+var distancey = abs(cam1.y - cam2.y);
 
 // Ha messze vannak → kettéosztás
-if (distance &gt; 500) {
+if (distancex &gt; 500 || distancey &gt; 250) {
     view_visible[1] = true;
     view_xport[1] = 1921;
-    view_wview[0] = 480;
     view_wview[1] = 480;
+    view_wview[0] = 480;
+    if(instance_exists(obj_player_szellem))
+    {
+    view_visible[1] = true;
+    view_xport[1] = 1921;
+    view_wview[1] = 480;
+    view_visible[0] = false;
+    view_visible[2] = true;
+    view_wview[2] = 480;
+    }
+    if(instance_exists(obj_player2_szellem))
+    {
+
+    view_wview[0] = 480;
+    view_visible[1] = false;
+    view_xport[3] = 1921;
+    view_visible[3] = true;
+    view_wview[3] = 480;
+    }
 
 }
 // Ha közel vannak → 1 képernyő
 else {
     view_visible[1] = false;
-    view_xport[1] = 0;
+    view_wview[0] = 960;  
+    if(instance_exists(obj_player_szellem))
+    {
+    view_visible[1] = false;
+    view_wview[2] = 960; 
+    }
+    if(instance_exists(obj_player2_szellem))
+    {
+    view_visible[3] = false;
     view_wview[0] = 960;
-    view_wview[1] = 960;
-
+    
+    }
+ 
 }
-
-
 </string>
           </argument>
         </arguments>
@@ -67,8 +99,16 @@ else {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>var distance = abs(obj_player.x - obj_player2.x);
-if (distance &gt; 500) {
+            <string>var cam1 = obj_player;
+if (instance_exists(obj_player_szellem)) cam1 = obj_player_szellem;
+
+var cam2 = obj_player2;
+if (instance_exists(obj_player2_szellem)) cam2 = obj_player2_szellem;
+
+var distancex = abs(cam1.x - cam2.x);
+var distancey = abs(cam1.y - cam2.y);
+
+if (distancex &gt; 500 || distancey &gt; 250) {
 draw_set_color(c_black);
 
 var middle = display_get_gui_width() / 2;

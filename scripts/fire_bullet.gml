@@ -20,8 +20,10 @@ else
 // Sebesség
 b.speed = 25;
 
-// Ammo fogyasztása
-ammo[current_ammo] -= 1;
+// ---------------------------------------------------------------
+//                     Ammo fogyasztása  (GLOBAL)
+// ---------------------------------------------------------------
+global.ammo[current_ammo] -= 1;
 
 // Cooldown
 if (current_ammo == 3)
@@ -37,4 +39,3 @@ can_shoot = false;
 if (current_ammo == 3) {
     recoil_timer = recoil_time_max;
 }
-

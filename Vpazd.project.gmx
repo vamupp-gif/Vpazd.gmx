@@ -20,9 +20,13 @@
     <sprites name="player">
       <sprite>sprites\spr_player_run</sprite>
       <sprite>sprites\spr_player_creep</sprite>
+      <sprite>sprites\spr_player_aldas</sprite>
       <sprite>sprites\spr_player_down</sprite>
       <sprite>sprites\spr_player_slide</sprite>
       <sprite>sprites\spr_player_idle</sprite>
+      <sprite>sprites\spr_player_halott</sprite>
+      <sprite>sprites\spr_szellem_idle</sprite>
+      <sprite>sprites\spr_szellem_move</sprite>
       <sprite>sprites\spr_wall</sprite>
       <sprite>sprites\spr_player_land</sprite>
       <sprite>sprites\spr_player_jump</sprite>
@@ -30,9 +34,13 @@
       <sprite>sprites\spr_player_doublejump</sprite>
       <sprites name="fegyver">
         <sprite>sprites\spr_bullet</sprite>
+        <sprite>sprites\spr_bullet_machinegun</sprite>
         <sprite>sprites\spr_bullet_shotgun</sprite>
         <sprite>sprites\spr_explosion</sprite>
         <sprite>sprites\spr_ammo</sprite>
+        <sprite>sprites\sprite75</sprite>
+        <sprite>sprites\sprite76</sprite>
+        <sprite>sprites\sprite77</sprite>
         <sprite>sprites\spr_key</sprite>
       </sprites>
       <sprite>sprites\spr_heart</sprite>
@@ -51,6 +59,8 @@
       <sprite>sprites\spr_door</sprite>
       <sprites name="player2">
         <sprite>sprites\spr_player2_run</sprite>
+        <sprite>sprites\spr_player2_halott</sprite>
+        <sprite>sprites\spr_player2_aldas</sprite>
         <sprite>sprites\spr_player2_creep</sprite>
         <sprite>sprites\spr_player2_down</sprite>
         <sprite>sprites\spr_player2_slide</sprite>
@@ -87,6 +97,10 @@
           <sprite>sprites\spr_dboss_bullet</sprite>
         </sprites>
       </sprites>
+      <sprites name="enemy4">
+        <sprite>sprites\spr_enemy4_idle</sprite>
+        <sprite>sprites\sprite79</sprite>
+      </sprites>
     </sprites>
     <sprite>sprites\spr_trambulin</sprite>
     <sprite>sprites\sprite27</sprite>
@@ -97,6 +111,7 @@
     <sprite>sprites\sprite55</sprite>
     <sprites name="map">
       <sprite>sprites\spr_buttom</sprite>
+      <sprite>sprites\spr_sirko</sprite>
     </sprites>
   </sprites>
   <backgrounds name="background">
@@ -107,6 +122,8 @@
   <scripts name="scripts">
     <script>scripts\player_hit_enemy.gml</script>
     <script>scripts\fire_bullet.gml</script>
+    <script>scripts\fire_bullet2.gml</script>
+    <script>scripts\other_player_is_dead.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
@@ -135,6 +152,9 @@
         <object>objects\obj_bullet_rocket</object>
         <object>objects\obj_bullet_machinegun</object>
       </objects>
+      <object>objects\obj_player_szellem</object>
+      <object>objects\obj_player2_szellem</object>
+      <object>objects\obj_sirko</object>
     </objects>
     <object>objects\obj_solid</object>
     <objects name="enemy">
@@ -150,6 +170,7 @@
         <object>objects\obj_bosstojas</object>
         <object>objects\obj_boss_healthbar</object>
       </objects>
+      <object>objects\obj_enemy4</object>
     </objects>
     <object>objects\save</object>
     <objects name="npc">
